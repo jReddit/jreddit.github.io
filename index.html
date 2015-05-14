@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>jReddit by jReddit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">jReddit</h1>
+      <h2 class="project-tagline">Java wrapper for Reddit API</h2>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="jreddit" class="anchor" href="#jreddit" aria-hidden="true"><span class="octicon octicon-link"></span></a>jReddit</h1>
+
+<p><a href="https://travis-ci.org/jReddit/jReddit"><img src="https://travis-ci.org/jReddit/jReddit.png?branch=master" alt="Build Status"></a>
+<a href="https://maven-badges.herokuapp.com/maven-central/com.github.jreddit/jreddit"><img src="https://maven-badges.herokuapp.com/maven-central/com.github.jreddit/jreddit/badge.svg?style=flat" alt="Maven Central"></a>
+<a href="https://coveralls.io/r/jReddit/jReddit"><img src="https://coveralls.io/repos/jReddit/jReddit/badge.svg" alt="Coverage Status"></a></p>
+
+<h3>
+<a id="what-is-jreddit" class="anchor" href="#what-is-jreddit" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is jReddit?</h3>
+
+<p>jReddit is a wrapper for the Reddit API written in Java. Project started by Omer Elnour. Taken over for further development and maintainence by <a href="http://www.goel.im">Karan Goel</a>.</p>
+
+<h3>
+<a id="how-to-use-jreddit" class="anchor" href="#how-to-use-jreddit" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use jReddit?</h3>
+
+<p>At the moment, jReddit can be included in your project using:</p>
+
+<h4>
+<a id="maven" class="anchor" href="#maven" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maven</h4>
+
+<pre><code>&lt;dependency&gt;
+        &lt;groupId&gt;com.github.jreddit&lt;/groupId&gt;
+        &lt;artifactId&gt;jreddit&lt;/artifactId&gt;
+        &lt;version&gt;1.0.3&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<h4>
+<a id="gradle" class="anchor" href="#gradle" aria-hidden="true"><span class="octicon octicon-link"></span></a>Gradle</h4>
+
+<pre><code>dependencies {
+    compile group: 'com.github.jreddit', name: 'jreddit', version: '1.0.3'
+}
+</code></pre>
+
+<h3>
+<a id="what-can-it-do" class="anchor" href="#what-can-it-do" aria-hidden="true"><span class="octicon octicon-link"></span></a>What can it do?</h3>
+
+<p>jReddit can login with a user, retrieve user information, submit new links, and vote/comment on submissions, send and receive messages and notifications among other things.</p>
+
+<h3>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
+
+<p>Connect a user</p>
+
+<div class="highlight highlight-java"><pre><span class="pl-c">// Initialize REST Client</span>
+<span class="pl-smi">RestClient</span> restClient <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">HttpRestClient</span>();
+restClient<span class="pl-k">.</span>setUserAgent(<span class="pl-s"><span class="pl-pds">"</span>bot/1.0 by name<span class="pl-pds">"</span></span>);
+
+<span class="pl-c">// Connect the user </span>
+<span class="pl-smi">User</span> user <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">User</span>(restClient, <span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>password<span class="pl-pds">"</span></span>);
+<span class="pl-k">try</span> {
+    user<span class="pl-k">.</span>connect();
+} <span class="pl-k">catch</span> (<span class="pl-smi">Exception</span> e) {
+    e<span class="pl-k">.</span>printStackTrace();
+}</pre></div>
+
+<p>Retrieve top 100 submissions of /r/programming</p>
+
+<div class="highlight highlight-java"><pre><span class="pl-c">// Handle to Submissions, which offers the basic API submission functionality</span>
+<span class="pl-smi">Submissions</span> subms <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">Submissions</span>(restClient, user);
+
+<span class="pl-c">// Retrieve submissions of a submission</span>
+<span class="pl-k">List&lt;<span class="pl-smi">Submission</span>&gt;</span> submissionsSubreddit <span class="pl-k">=</span> subms<span class="pl-k">.</span>ofSubreddit(<span class="pl-s"><span class="pl-pds">"</span>programming<span class="pl-pds">"</span></span>, <span class="pl-smi">SubmissionSort</span><span class="pl-c1"><span class="pl-k">.</span>TOP</span>, <span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-c1">100</span>, <span class="pl-c1">null</span>, <span class="pl-c1">null</span>, <span class="pl-c1">true</span>);
+</pre></div>
+
+<p>Submit a link and self post</p>
+
+<div class="highlight highlight-java"><pre>
+<span class="pl-c">// Handle to SubmitActions, which offers the basic API functionality to submit comments and posts</span>
+<span class="pl-smi">SubmitActions</span> submitActions <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">SubmitActions</span>(restClient, user);
+
+<span class="pl-c">// Submit a link</span>
+submitActions<span class="pl-k">.</span>submitLink(
+        <span class="pl-s"><span class="pl-pds">"</span>Oracle V Google judge is a programmer!<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>http://www.i-programmer.info/news/193-android/4224-oracle-v-google-judge-is-a-programmer.html<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>programming<span class="pl-pds">"</span></span>);
+
+<span class="pl-c">// Submit a self post</span>
+submitActions<span class="pl-k">.</span>submitSelfPost(<span class="pl-s"><span class="pl-pds">"</span>What's the difference between a duck?<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>One of its legs are both the same!<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>funny<span class="pl-pds">"</span></span>);</pre></div>
+
+<p>Send a message to another user</p>
+
+<div class="highlight highlight-java"><pre><span class="pl-k">import</span> <span class="pl-smi">com.github.jreddit.message.Messages</span>;
+<span class="pl-k">import</span> <span class="pl-smi">com.github.jreddit.user.User</span>;
+
+<span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@author</span> Karan Goel</span>
+<span class="pl-c"> */</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">ComposeTest</span> {
+
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">main</span>(<span class="pl-k">String</span>[] <span class="pl-v">args</span>) {
+        <span class="pl-smi">User</span> user <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+        <span class="pl-smi">String</span> recipientUsername <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>other_user<span class="pl-pds">"</span></span>;
+        <span class="pl-k">try</span> {
+            user <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">User</span>(<span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>password<span class="pl-pds">"</span></span>); <span class="pl-c">// Add your username and password</span>
+            user<span class="pl-k">.</span>connect();
+        } <span class="pl-k">catch</span> (<span class="pl-smi">Exception</span> exception) {
+            exception<span class="pl-k">.</span>printStackTrace();
+        }
+
+        <span class="pl-k">new</span> <span class="pl-smi">Messages</span>()<span class="pl-k">.</span>compose(user, recipientUsername, <span class="pl-s"><span class="pl-pds">"</span>this is the title<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>the message<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>);
+    }
+}</pre></div>
+
+<h1>
+<a id="possibility-to-configure-restclient" class="anchor" href="#possibility-to-configure-restclient" aria-hidden="true"><span class="octicon octicon-link"></span></a>Possibility to configure RestClient</h1>
+
+<h3>
+<a id="normal-instantiation" class="anchor" href="#normal-instantiation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Normal instantiation</h3>
+
+<p>There are 2 implementation at the moment for <code>RestClient</code></p>
+
+<ul>
+<li><code>HttpRestClient</code></li>
+<li>
+<code>PoliteHttpRestClient</code> <em>recommended RestClient since Reddit API has a limitation to make only 1 request every 2 seconds.</em>
+</li>
+</ul>
+
+<h3>
+<a id="through-restclientfactory" class="anchor" href="#through-restclientfactory" aria-hidden="true"><span class="octicon octicon-link"></span></a>Through RestClientFactory</h3>
+
+<p>Factory and utility class to easily instantiate <code>RestClient</code>.
+Available methods:</p>
+
+<ul>
+<li><code>newHttpRestClient()</code></li>
+<li><code>newHttpRestClient(HttpClient)</code></li>
+<li><code>newPoliteHttpRestClient()</code></li>
+<li><code>newPoliteHttpRestClient(HttpClient)</code></li>
+<li><code>newProxyHttpClient(hostname, port)</code></li>
+<li><code>newProxyHttpClient(hostname, port, scheme)</code></li>
+</ul>
+
+<h3>
+<a id="other-examples" class="anchor" href="#other-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other examples</h3>
+
+<h2>
+<a id="java" class="anchor" href="#java" aria-hidden="true"><span class="octicon octicon-link"></span></a>Java</h2>
+
+<p>You can find other examples <a href="https://github.com/karan/jReddit/tree/master/src/main/java/examples">here</a></p>
+
+<h2>
+<a id="android" class="anchor" href="#android" aria-hidden="true"><span class="octicon octicon-link"></span></a>Android</h2>
+
+<p>You can find a small example of how to integrate jReddit in an Android application <a href="https://github.com/jReddit/jReddit/tree/master/examples/Jreddit-sample-project">here</a></p>
+
+<h3>
+<a id="whats-next-for-jreddit" class="anchor" href="#whats-next-for-jreddit" aria-hidden="true"><span class="octicon octicon-link"></span></a>What's next for jReddit?</h3>
+
+<p>The plan is to implement every feature documented <a href="http://www.reddit.com/dev/api">here</a>. To see which methods have been implemented, and which have not, see <a href="https://github.com/karan/jReddit/blob/master/implemented_methods.md">this file</a>.</p>
+
+<h3>
+<a id="how-to-contribute" class="anchor" href="#how-to-contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to contribute?</h3>
+
+<p>Personally, I would suggest reading through the source code to understand the general structure and standards used. Then check the <a href="https://github.com/karan/jReddit/blob/master/implemented_methods.md">implemented_methods.md</a> file to see which methods have not yet been implemented. Choose the ones you'd like to contribute to. After you write the method (and maybe commit it?), write a test to see if it works fine and as expected. Then make sure other tests are working too and your code does not break anty other method.</p>
+
+<p>Send in a pull request with the test and I'll be happy to merge! :-)</p>
+
+<h3>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h3>
+
+<ol>
+<li><p><a href="http://code.google.com/p/json-simple/">JSON-simple</a></p></li>
+<li><p><a href="https://hc.apache.org/">Apache HttpComponents</a></p></li>
+<li><p><a href="https://commons.apache.org/proper/commons-io/">Apache Commons IO</a></p></li>
+</ol>
+
+      <footer class="site-footer">
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-62944961-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
+
